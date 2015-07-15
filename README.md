@@ -1,2 +1,2 @@
 # blackboard
-this is a blackboard
+this is a blackboard based on Qt
