@@ -11,10 +11,12 @@ TEMPLATE = lib
 
 DEFINES += BLACKBOARDCORE_LIBRARY
 
-SOURCES += BlackboardCore.cpp
+SOURCES += BlackboardCore.cpp \
+    BbScene.cpp
 
 HEADERS += BlackboardCore.h\
-        blackboardcore_global.h
+        blackboardcore_global.h \
+    BbScene.h
 
 unix {
     target.path = /usr/lib
