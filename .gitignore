@@ -1,4 +1,8 @@
 /*/*.vcxproj
 /*/*.vcxproj.user
 /*/*.vcxproj.filters
+/*/GeneratedFiles
+/debug/
 *.pro.user
+*.sln
+*.suo

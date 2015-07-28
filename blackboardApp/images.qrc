@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/tool_arrow.png</file>
+        <file>images/tool_pencil.png</file>
+    </qresource>
+</RCC>
