@@ -39,3 +39,6 @@ CONFIG(debug, debug|release){
     #libs
     LIBS += -L$$PWD/../debug
 }
+
+RESOURCES += \
+    images.qrc

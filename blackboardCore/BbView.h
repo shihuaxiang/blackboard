@@ -4,6 +4,8 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QGraphicsRectItem>
+#include <QTimer>
+#include <QGraphicsPixmapItem>
 
 #include "blackboardcore_global.h"
 
@@ -14,10 +16,10 @@ class BLACKBOARDCORESHARED_EXPORT BbView : public QGraphicsView
 {
     Q_OBJECT
 public:
-	explicit BbView(QWidget *parent = 0, double w = 1280, double h = 720, int pageNum = 1);
+    explicit BbView(QWidget *parent = 0, double w = 1280, double h = 720, int pageNum = 1);
     ~BbView();
-	bool isFixedRatio();
-	void setFixedRatio(bool fixedRatio);
+    bool isFixedRatio();
+    void setFixedRatio(bool fixedRatio);
 
     enum OperateMode   //模式
     {
@@ -30,15 +32,17 @@ public:
     BbScene* getScene();
     BbView::OperateMode getMode();
     void setMode(BbView::OperateMode operateMode);
-	void print();
+    void print();
+    void replay();
 
-	void turnNextPage();
-	void turnPrevPage();
-	void setViewRect();
+    void turnNextPage();
+    void turnPrevPage();
+    void setViewRect();
 
 signals:
 
-public slots:
+public slots :
+    void drawRecvPoint();
 
 protected:
     virtual void mousePressEvent(QMouseEvent *);
@@ -46,16 +50,21 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent *);
     virtual void paintEvent(QPaintEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
-	virtual void drawBackground(QPainter* painter, const QRectF& rect);
+    virtual void drawBackground(QPainter* painter, const QRectF& rect);
 
 private:
     BbView::OperateMode mode;
 
     BbLine* line;
 
-	int		_pageIndex;
-	int		_pageNum;
-	bool	_fixedRatio;
+    int		_pageIndex;
+    int		_pageNum;
+    bool	_fixedRatio;
+
+    QTimer* _drawTimer;
+	QPointF _drawPoint;
+
+
 };
 
 #endif // BBVIEW_H

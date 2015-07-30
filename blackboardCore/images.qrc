@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/arrowcursor.png</file>
+        <file>images/cur_g.png</file>
+        <file>images/cur_r.png</file>
+        <file>images/laser.png</file>
+    </qresource>
+</RCC>

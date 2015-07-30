@@ -3,7 +3,9 @@
 #include "BbScene.h"
 #include "BbUtil.h"
 
-BbScene::BbScene(double w, double h, int pageNum, QObject *parent) : QGraphicsScene(parent)
+BbScene::BbScene(double w, double h, int pageNum, QObject *parent)
+    : QGraphicsScene(parent),
+    _pixmapItem(NULL)
 {	
 	_width = w;
 	_height = h * pageNum;
@@ -69,7 +71,7 @@ void BbScene::testAddPixmap()
 {
 	QPixmap* pixmap = new QPixmap;
 	
-	bool b = pixmap->load("D://4.png");
+    bool b = pixmap->load(":/images/cur_g.png");
 
 	QGraphicsPixmapItem* item = new QGraphicsPixmapItem;
 	item->setPixmap(*pixmap);
@@ -98,4 +100,26 @@ void BbScene::drawBackground(QPainter* painter, const QRectF& rect)
 	//qDebug() << "\n BbScene::drawBackground " << rect;
 
 	QGraphicsScene::drawBackground(painter, rect);
+}
+
+void BbScene::startDrawingCursor()
+{
+    if (_pixmapItem == NULL)
+    {
+        QPixmap* pixmap = new QPixmap(":/images/arrowcursor.png");
+        _pixmapItem = new QGraphicsPixmapItem;
+        _pixmapItem->setPixmap(*pixmap);
+    }
+
+    addItem(_pixmapItem);
+}
+
+void BbScene::moveDrawingCursor(QPointF& point)
+{
+    _pixmapItem->setPos(point);
+}
+
+void BbScene::stopDrawingCursor()
+{
+    removeItem(_pixmapItem);
 }

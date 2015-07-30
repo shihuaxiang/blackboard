@@ -222,6 +222,10 @@ void MainWindow::slotTest(int index)
 		bbView->turnPrevPage();
 		break;
 
+	case 2:
+		bbView->replay();
+		break;
+
 	default:
 		break;
 	}

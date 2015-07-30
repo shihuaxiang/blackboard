@@ -6,20 +6,21 @@
 #include "BbUtil.h"
 
 BbView::BbView(QWidget *parent, double w, double h, int pageNum)
-: QGraphicsView(parent), 
-mode(BbView::OperateMode::SelectMode), 
-_pageIndex(0), 
-_pageNum(pageNum),
-_fixedRatio(0),
-line(NULL)
+    : QGraphicsView(parent),
+      mode(BbView::OperateMode::SelectMode),
+      _pageIndex(0),
+      _pageNum(pageNum),
+      _fixedRatio(0),
+      line(NULL),
+      _drawTimer(NULL)
 {
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     BbScene* theScene = new BbScene();
     this->setScene(theScene);
 
-	setViewRect();
+    setViewRect();
 }
 
 BbView::~BbView()
@@ -29,12 +30,12 @@ BbView::~BbView()
 
 bool BbView::isFixedRatio()
 {
-	return _fixedRatio;
+    return _fixedRatio;
 }
 
 void BbView::setFixedRatio(bool fixedRatio)
 {
-	_fixedRatio = fixedRatio;
+    _fixedRatio = fixedRatio;
 }
 
 BbView::OperateMode BbView::getMode()
@@ -122,69 +123,109 @@ void BbView::mouseReleaseEvent(QMouseEvent *event)
 
 void BbView::paintEvent(QPaintEvent *event)
 { 
-    QGraphicsView::paintEvent(event); 
+    QGraphicsView::paintEvent(event);
 }
 
 void BbView::resizeEvent(QResizeEvent *event)
 {
-	QGraphicsView::resizeEvent(event);
-	
-	QRectF viewRect = this->sceneRect();
-	double width = event->size().width();
-	double xscale = width / viewRect.width();
+    QGraphicsView::resizeEvent(event);
 
-	double height = event->size().height();
-	double yscale = height / viewRect.height();
-	
-	this->resetMatrix();
-	this->scale(xscale, yscale);
+    QRectF viewRect = this->sceneRect();
+    double width = event->size().width();
+    double xscale = width / viewRect.width();
+
+    double height = event->size().height();
+    double yscale = height / viewRect.height();
+
+    this->resetMatrix();
+    this->scale(xscale, yscale);
 }
 
 void BbView::drawBackground(QPainter* painter,const QRectF& rect)
 {	
-	QGraphicsView::drawBackground(painter,rect);
+    QGraphicsView::drawBackground(painter,rect);
 
-	//QPen thePen = BbUtil::createPen(10, Qt::yellow);
-	//painter->setPen(thePen);
+    //QPen thePen = BbUtil::createPen(10, Qt::yellow);
+    //painter->setPen(thePen);
 
-	//QRectF theRect = rect;
-	//theRect.adjust(5, 5, -5, -5);
-	//painter->drawRect(theRect);
+    //QRectF theRect = rect;
+    //theRect.adjust(5, 5, -5, -5);
+    //painter->drawRect(theRect);
 
-	
+
 }
 
 void BbView::turnNextPage()
 {
-	_pageIndex++;
+    _pageIndex++;
 
-	if (_pageIndex >= _pageNum)
-		_pageIndex = 0;
+    if (_pageIndex >= _pageNum)
+        _pageIndex = 0;
 
-	setViewRect();
+    setViewRect();
 }
 
 void BbView::turnPrevPage()
 {
-	_pageIndex--;
+    _pageIndex--;
 
-	if (_pageIndex < 0)
-		_pageIndex = _pageNum - 1;
+    if (_pageIndex < 0)
+        _pageIndex = _pageNum - 1;
 
-	setViewRect();
+    setViewRect();
 }
 
 void BbView::setViewRect()
 {
-	QRectF viewRect = getScene()->getPageRect(_pageIndex);
+    QRectF viewRect = getScene()->getPageRect(_pageIndex);
 
-	qDebug() << "\n\nBbView::setViewRect " << viewRect;
+    qDebug() << "\n\nBbView::setViewRect " << viewRect;
 
-	this->setSceneRect(viewRect);
+    this->setSceneRect(viewRect);
 }
 
 void BbView::print()
 {
-	qDebug() << "BbView sceneRect" << this->sceneRect();
-	qDebug() << "theScene sceneRect" << this->scene()->sceneRect();	
+    qDebug() << "BbView sceneRect" << this->sceneRect();
+    qDebug() << "theScene sceneRect" << this->scene()->sceneRect();
+}
+
+void BbView::replay()
+{
+    if (_drawTimer == NULL)
+    {
+        _drawTimer = new QTimer(this);
+        connect(_drawTimer, SIGNAL(timeout()), this, SLOT(drawRecvPoint()));
+
+		_drawPoint = mapToScene(this->width() / 2, this->height() / 2);
+
+        line = new BbLine(getScene());
+		line->startDraw(_drawPoint);
+
+        getScene()->startDrawingCursor();
+
+        _drawTimer->start(300);
+    }
+    else
+    {
+        _drawTimer->stop();
+        killTimer(_drawTimer->timerId());
+        delete _drawTimer;
+		_drawTimer = NULL;
+    
+        getScene()->stopDrawingCursor();
+		
+		_drawPoint = mapToScene(this->width() / 2, this->height() / 2);
+		line->finishDraw(_drawPoint);
+    }
+}
+
+void BbView::drawRecvPoint()
+{
+	int x = -50 + qrand() % 100;// this->width();
+	int y = -50 + qrand() % 100;// this->height();
+
+	_drawPoint += QPointF(x,y);
+    getScene()->moveDrawingCursor(_drawPoint);
+	line->drawing(_drawPoint);
 }

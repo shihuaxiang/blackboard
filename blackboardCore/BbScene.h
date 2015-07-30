@@ -2,23 +2,27 @@
 #define BBSCENE_H
 
 #include <QGraphicsScene>
-
+#include <QGraphicsPixmapItem>
 #include "blackboardcore_global.h"
 
 class BLACKBOARDCORESHARED_EXPORT BbScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-	explicit BbScene(double w = 1280, double h = 720, int pageNum = 1, QObject *parent = 0);
+    explicit BbScene(double w = 1280, double h = 720, int pageNum = 1, QObject *parent = 0);
     ~BbScene();
 
-	double getPageWidth();
-	double getPageHeight();
-	QRectF getPageRect(int pageIndex);
+    double getPageWidth();
+    double getPageHeight();
+    QRectF getPageRect(int pageIndex);
 
-	void testAddRect();
-	void testAddText();
-	void testAddPixmap();
+    void testAddRect();
+    void testAddText();
+    void testAddPixmap();
+
+    void startDrawingCursor();
+    void moveDrawingCursor(QPointF& point);
+    void stopDrawingCursor();
 
 signals:
 
@@ -28,11 +32,13 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-	virtual void drawBackground(QPainter* painter, const QRectF& rect);
+    virtual void drawBackground(QPainter* painter, const QRectF& rect);
 
 private:
-	int _width;
-	int _height;
+    int _width;
+    int _height;
+
+    QGraphicsPixmapItem* _pixmapItem;
 
 };
 
