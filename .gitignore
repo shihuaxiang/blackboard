@@ -6,3 +6,6 @@
 *.pro.user
 *.sln
 *.suo
+*.sdf
+*.opensdf
+/*/Win32/

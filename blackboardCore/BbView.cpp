@@ -3,6 +3,7 @@
 #include "BbView.h"
 #include "BbScene.h"
 #include "BbLine.h"
+#include "BbText.h"
 #include "BbUtil.h"
 
 BbView::BbView(QWidget *parent, double w, double h, int pageNum)
@@ -16,6 +17,7 @@ BbView::BbView(QWidget *parent, double w, double h, int pageNum)
 {
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setDragMode(QGraphicsView::RubberBandDrag);
 
     BbScene* theScene = new BbScene();
     this->setScene(theScene);
@@ -69,6 +71,16 @@ void BbView::mousePressEvent(QMouseEvent *event)
             return;
         }
     }
+    else if (getMode() == OperateMode::TextMode)
+    {
+        if (event->button() == Qt::LeftButton)
+        {
+            textItem = new BbText(getScene());
+            textItem->startDraw(point);
+
+            return;
+        }
+    }
     else if(getMode() == OperateMode::PointMode)
     {
         qDebug() << "BbView::mousePressEvent eventPos: " << event->pos() << "scenePoint:" << point;
@@ -93,6 +105,10 @@ void BbView::mouseMoveEvent(QMouseEvent *event)
             return;
         }
     }
+    else if (getMode() == OperateMode::TextMode)
+    {
+        return;
+    }
 
     QGraphicsView::mousePressEvent(event);
 }
@@ -111,6 +127,10 @@ void BbView::mouseReleaseEvent(QMouseEvent *event)
 
             return;
         }
+    }
+    else if (getMode() == OperateMode::TextMode)
+    {
+        return;
     }
     else if(getMode() == OperateMode::PointMode)
     {

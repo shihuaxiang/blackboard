@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/tool_arrow.png</file>
-        <file>images/tool_pencil.png</file>
+        <file>images/arrow.png</file>
+        <file>images/move.png</file>
+        <file>images/pencil.png</file>
+        <file>images/text.png</file>
+        <file>images/point.png</file>
     </qresource>
 </RCC>

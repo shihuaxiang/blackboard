@@ -20,8 +20,9 @@ public:
 	void createTestAction();
 
 private slots:
-    void on_actionPen_triggered();
     void on_actionArrow_triggered();
+    void on_actionPencil_triggered();
+    void on_actionText_triggered();
     void on_actionPoint_triggered();
 
     void slotSize1280X720();
@@ -39,9 +40,11 @@ protected:
 private:
     BbView* bbView;
 
-    QAction *actionPen;
     QAction *actionArrow;
+    QAction *actionPencil;
+    QAction *actionText;
     QAction *actionPoint;
+
     QActionGroup* actionGroup;
 
 	QToolBar *mainToolBar;

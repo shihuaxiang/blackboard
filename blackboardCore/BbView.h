@@ -11,6 +11,7 @@
 
 class BbScene;
 class BbLine;
+class BbText;
 
 class BLACKBOARDCORESHARED_EXPORT BbView : public QGraphicsView
 {
@@ -25,7 +26,8 @@ public:
     {
         DrawMode,     //绘制模式
         SelectMode,   //选择模式
-        ViewMode,	  //浏览模式
+        ViewMode,     //浏览模式
+        TextMode,
         PointMode
     };
 
@@ -56,6 +58,7 @@ private:
     BbView::OperateMode mode;
 
     BbLine* line;
+    BbText* textItem;
 
     int		_pageIndex;
     int		_pageNum;

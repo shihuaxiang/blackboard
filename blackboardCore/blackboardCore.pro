@@ -15,14 +15,16 @@ SOURCES += BlackboardCore.cpp \
     BbScene.cpp \
     BbView.cpp \
     BbLine.cpp \
-    BbUtil.cpp
+    BbUtil.cpp \
+    BbText.cpp
 
 HEADERS += BlackboardCore.h\
         blackboardcore_global.h \
     BbScene.h \
     BbView.h \
     BbLine.h \
-    BbUtil.h
+    BbUtil.h \
+    BbText.h
 
 unix {
     target.path = /usr/lib

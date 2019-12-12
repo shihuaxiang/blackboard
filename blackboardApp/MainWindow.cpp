@@ -91,21 +91,10 @@ void MainWindow::createTestAction()
 void MainWindow::createActionGroup()
 {
     {
-        actionPen = new QAction(this);
-        actionPen->setCheckable(true);
-        QIcon icon;
-        icon.addFile(QStringLiteral(":/images/tool_pencil.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionPen->setIcon(icon);
-
-        mainToolBar->addAction(actionPen);
-        connect(actionPen, SIGNAL(triggered()), this, SLOT(on_actionPen_triggered()));
-    }
-
-    {
         actionArrow = new QAction(this);
         actionArrow->setCheckable(true);
         QIcon icon;
-        icon.addFile(QStringLiteral(":/images/tool_arrow.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/images/arrow.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionArrow->setIcon(icon);
 
         mainToolBar->addAction(actionArrow);
@@ -113,16 +102,42 @@ void MainWindow::createActionGroup()
     }
 
     {
-        actionPoint = new QAction("P",this);
+        actionPencil = new QAction(this);
+        actionPencil->setCheckable(true);
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/images/pencil.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionPencil->setIcon(icon);
+
+        mainToolBar->addAction(actionPencil);
+        connect(actionPencil, SIGNAL(triggered()), this, SLOT(on_actionPencil_triggered()));
+    }
+
+    {
+        actionText = new QAction(this);
+        actionText->setCheckable(true);
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/images/text.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionText->setIcon(icon);
+
+        mainToolBar->addAction(actionText);
+        connect(actionText, SIGNAL(triggered()), this, SLOT(on_actionText_triggered()));
+    }
+
+    {
+        actionPoint = new QAction(this);
         actionPoint->setCheckable(true);
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/images/point.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionPoint->setIcon(icon);
 
         mainToolBar->addAction(actionPoint);
         connect(actionPoint, SIGNAL(triggered()), this, SLOT(on_actionPoint_triggered()));
     }
 
     actionGroup = new QActionGroup(this);
-    actionGroup->addAction(actionPen);
     actionGroup->addAction(actionArrow);
+    actionGroup->addAction(actionPencil);
+    actionGroup->addAction(actionText);
     actionGroup->addAction(actionPoint);
     actionArrow->setChecked(true);
 }
@@ -134,16 +149,22 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
 }
 
-void MainWindow::on_actionPen_triggered()
-{
-    if(actionPen->isChecked())
-        bbView->setMode(BbView::OperateMode::DrawMode);
-}
-
 void MainWindow::on_actionArrow_triggered()
 {
     if(actionArrow->isChecked())
         bbView->setMode(BbView::OperateMode::SelectMode);
+}
+
+void MainWindow::on_actionPencil_triggered()
+{
+    if(actionPencil->isChecked())
+        bbView->setMode(BbView::OperateMode::DrawMode);
+}
+
+void MainWindow::on_actionText_triggered()
+{
+    if(actionText->isChecked())
+        bbView->setMode(BbView::OperateMode::TextMode);
 }
 
 void MainWindow::on_actionPoint_triggered()
