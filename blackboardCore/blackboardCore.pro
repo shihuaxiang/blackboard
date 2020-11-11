@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += widgets
+CONFIG += c++11
 
 TARGET = blackboardCore
 TEMPLATE = lib
@@ -31,16 +32,20 @@ unix {
     INSTALLS += target
 }
 
-CONFIG(debug, debug|release){
-    DESTDIR = $$PWD/../debug
-    MOC_DIR += $$PWD/GeneratedFiles/debug
-    OBJECTS_DIR += $$PWD/GeneratedFiles/debug
-    UI_DIR += $$PWD/GeneratedFiles
-    RCC_DIR += $$PWD/GeneratedFiles
-
-    #libs
-    LIBS += -L$$PWD/../debug
+CONFIG(debug, debug|release) {
+    deploy_type = debug
+} else {
+    deploy_type = release
 }
+
+DESTDIR = $$PWD/../$$deploy_type
+MOC_DIR += $$PWD/GeneratedFiles/$$deploy_type
+OBJECTS_DIR += $$PWD/GeneratedFiles/$$deploy_type
+UI_DIR += $$PWD/GeneratedFiles
+RCC_DIR += $$PWD/GeneratedFiles
+
+#libs
+LIBS += -L$$PWD/../$$deploy_type
 
 RESOURCES += \
     images.qrc

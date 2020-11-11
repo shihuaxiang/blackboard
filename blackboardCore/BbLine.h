@@ -2,6 +2,8 @@
 #define BBLINE_H
 
 #include <QGraphicsPathItem>
+#include <QPainter>
+#include <QStyleOptionGraphicsItem>
 #include "BbScene.h"
 
 class BbLine : public QGraphicsPathItem
@@ -19,6 +21,12 @@ private:
 
     int     _lineWidth;
     QColor  _lineColor;
+
+    QVector<QPointF> m_points;
+
+    bool m_dirty = false;
+    bool m_finished = false;
+    QImage m_image;
 };
 
 #endif // BBLINE_H

@@ -29,6 +29,10 @@ void BbLine::startDraw(QPointF& point)
     path.moveTo(point);
     path.lineTo(point);
     setPath(path);
+
+    m_points.push_back(point);
+
+    m_dirty = true;
 }
 
 void BbLine::drawing(QPointF& point)
@@ -36,6 +40,10 @@ void BbLine::drawing(QPointF& point)
     QPainterPath path = this->path();
     path.lineTo(point);
     setPath(path);
+
+    m_points.push_back(point);
+
+    m_dirty = true;
 }
 
 void BbLine::finishDraw(QPointF& point)
@@ -43,4 +51,7 @@ void BbLine::finishDraw(QPointF& point)
     QPainterPath path = this->path();
     path.lineTo(point);
     setPath(path);
+
+    m_dirty = true;
+    m_finished = true;
 }
