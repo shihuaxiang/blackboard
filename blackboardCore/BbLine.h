@@ -12,6 +12,8 @@ public:
     explicit BbLine(BbScene* scene, QGraphicsItem *parent = 0);
     ~BbLine();
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
     virtual void startDraw(QPointF& point);
     virtual void drawing(QPointF& point);
     virtual void finishDraw(QPointF& point);
@@ -24,9 +26,12 @@ private:
 
     QVector<QPointF> m_points;
 
-    bool m_dirty = false;
     bool m_finished = false;
     QImage m_image;
+ 
+    // 0 -- lineto
+    // 1 -- quadTo
+    int m_drawMode = 0;
 };
 
 #endif // BBLINE_H
