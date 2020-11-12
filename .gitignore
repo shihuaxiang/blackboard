@@ -3,6 +3,7 @@
 /*/*.vcxproj.filters
 /*/GeneratedFiles
 /debug/
+/release/
 *.pro.user
 *.sln
 *.suo
