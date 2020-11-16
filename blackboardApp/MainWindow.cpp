@@ -71,21 +71,28 @@ void MainWindow::createTestAction()
         connect(tempAction, SIGNAL(triggered()), this, SLOT(slotZoomout()));
     }
 
-    QSignalMapper *signalMapper = new QSignalMapper(this);
+    //
+    QActionGroup * testActionGroup = new QActionGroup(this);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 6; i++)
     {
-        QString text = QString("test%1").arg(i);
+        QString text;
+        if (i < 3)
+            text = QString("test%1").arg(i);
+        else if (i < 6)
+            text = QString("mode%1").arg(i-3);
 
         QAction* actionTest = new QAction(this);
+        actionTest->setCheckable(true);
         actionTest->setText(text);
         mainToolBar->addAction(actionTest);
 
-        connect(actionTest, SIGNAL(triggered()), signalMapper, SLOT(map()));
-        signalMapper->setMapping(actionTest, i);
-    }
+        testActionGroup->addAction(actionTest);
 
-    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(slotTest(int)));
+        connect(actionTest, &QAction::triggered, [this, i](){
+            slotTest(i);
+        });
+    }
 }
 
 void MainWindow::createActionGroup()
@@ -246,6 +253,12 @@ void MainWindow::slotTest(int index)
 	case 2:
 		bbView->replay();
 		break;
+
+    case 3:
+    case 4:
+    case 5:
+        bbView->changeCurveMode(index - 3);
+        break;
 
 	default:
 		break;

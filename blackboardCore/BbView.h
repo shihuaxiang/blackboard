@@ -41,6 +41,9 @@ public:
     void turnPrevPage();
     void setViewRect();
 
+    void changeCurveMode(int curveMode);
+    int getCurveMode();
+
 signals:
 
 public slots :
@@ -67,7 +70,10 @@ private:
     QTimer* _drawTimer;
 	QPointF _drawPoint;
 
-
+    // 0 -- lineto
+    // 1 -- quadTo
+    // 2 -- cubicTo
+    int     _curveMode = 0;
 };
 
 #endif // BBVIEW_H

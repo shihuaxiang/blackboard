@@ -5,11 +5,12 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include "BbScene.h"
+#include "BbView.h"
 
 class BbLine : public QGraphicsPathItem
 {
 public:
-    explicit BbLine(BbScene* scene, QGraphicsItem *parent = 0);
+    explicit BbLine(BbScene* scene, BbView* bbView, QGraphicsItem *parent = 0);
     ~BbLine();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -18,8 +19,11 @@ public:
     virtual void drawing(QPointF& point);
     virtual void finishDraw(QPointF& point);
 
+    int getCurveMode();
+
 private:
     BbScene* _scene;
+    BbView* _view;
 
     int     _lineWidth;
     QColor  _lineColor;
@@ -28,10 +32,6 @@ private:
 
     bool m_finished = false;
     QImage m_image;
- 
-    // 0 -- lineto
-    // 1 -- quadTo
-    int m_drawMode = 0;
 };
 
 #endif // BBLINE_H

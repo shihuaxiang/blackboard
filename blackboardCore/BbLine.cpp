@@ -7,7 +7,7 @@
 void lineInterpolate(const QPointF& pointA, const QPointF& pointB,
     QPointF& pointP1, QPointF& pointP2)
 {
-    const int k = 0.4;
+    const int k = 0.5;
 
     double deltaX = pointB.x() - pointA.x();
     double deltaY = pointB.y() - pointA.y();
@@ -19,8 +19,21 @@ void lineInterpolate(const QPointF& pointA, const QPointF& pointB,
     pointP2.setY(deltaY * (1 - k) + pointA.y());
 }
 
-BbLine::BbLine(BbScene* scene, QGraphicsItem *parent)
-    : QGraphicsPathItem(parent),_scene(scene)
+void genControlPoints(const QPointF& startPoint, const QPointF& endPoint,
+    QPointF& controlPoint1, QPointF& controlPoint2)
+{
+    double centerX = (startPoint.x() + endPoint.x()) / 2;
+
+    controlPoint1.setX(centerX);
+    controlPoint1.setY(startPoint.y());
+
+    controlPoint2.setX(centerX);
+    controlPoint2.setY(endPoint.y());
+}
+
+
+BbLine::BbLine(BbScene* scene, BbView* view, QGraphicsItem *parent)
+    : QGraphicsPathItem(parent), _scene(scene), _view(view)
 {
     _lineWidth = 5;
     _lineColor = Qt::green;
@@ -35,6 +48,11 @@ BbLine::~BbLine()
 
 }
 
+int BbLine::getCurveMode()
+{
+    return _view->getCurveMode();
+}
+
 void BbLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setRenderHint(QPainter::Antialiasing, true);
@@ -43,6 +61,19 @@ void BbLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
 void BbLine::startDraw(QPointF& point)
 {
+    if (getCurveMode() == 0)
+    {
+        _lineColor = Qt::darkGray;
+    }
+    else if (getCurveMode() == 1)
+    {
+        _lineColor = Qt::green;
+    }
+    else if (getCurveMode() == 2)
+    {
+        _lineColor = Qt::blue;
+    }
+
     QGraphicsItem *item = dynamic_cast<QGraphicsItem*>(this);
     _scene->addItem(item);
 
@@ -59,7 +90,7 @@ void BbLine::startDraw(QPointF& point)
 
 void BbLine::drawing(QPointF& point)
 {
-    if (m_drawMode == 0)
+    if (getCurveMode() == 0)
     {
         QPainterPath path = this->path();
         path.lineTo(point);
@@ -67,7 +98,7 @@ void BbLine::drawing(QPointF& point)
 
         m_points.push_back(point);
     }
-    else if (m_drawMode == 1)
+    else if (getCurveMode() == 1)
     {
         m_points.push_back(point);
 
@@ -89,17 +120,29 @@ void BbLine::drawing(QPointF& point)
             setPath(path);
         }
     }
+    else if (getCurveMode() == 2)
+    {
+        m_points.push_back(point);
+
+        QPainterPath path = this->path();
+        int n = m_points.size();
+        QPointF lastPoint = m_points[n - 2];
+        QPointF ctrlPoint1, ctrlPoint2;
+        genControlPoints(lastPoint, point, ctrlPoint1, ctrlPoint2);
+        path.cubicTo(ctrlPoint1, ctrlPoint2, point);
+        setPath(path);
+    }
 }
 
 void BbLine::finishDraw(QPointF& point)
 {
-    if (m_drawMode == 0)
+    if (getCurveMode() == 0)
     {
         QPainterPath path = this->path();
         path.lineTo(point);
         setPath(path);
     }
-    else if (m_drawMode == 1)
+    else if (getCurveMode() == 1)
     {
         m_points.push_back(point);
 
@@ -110,6 +153,18 @@ void BbLine::finishDraw(QPointF& point)
         lineInterpolate(lastPoint, point, pointP1, pointP2);
         path.quadTo(lastPoint, pointP1);
         path.lineTo(point);
+        setPath(path);
+    }
+    else if (getCurveMode() == 2)
+    {
+        m_points.push_back(point);
+
+        QPainterPath path = this->path();
+        int n = m_points.size();
+        QPointF lastPoint = m_points[n - 2];
+        QPointF ctrlPoint1, ctrlPoint2;
+        genControlPoints(lastPoint, point, ctrlPoint1, ctrlPoint2);
+        path.cubicTo(ctrlPoint1, ctrlPoint2, point);
         setPath(path);
     }
 

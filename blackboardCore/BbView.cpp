@@ -65,7 +65,7 @@ void BbView::mousePressEvent(QMouseEvent *event)
     {
         if (event->button() == Qt::LeftButton)
         {
-            line = new BbLine(getScene());
+            line = new BbLine(getScene(), this);
             line->startDraw(point);
 
             return;
@@ -219,7 +219,7 @@ void BbView::replay()
 
 		_drawPoint = mapToScene(this->width() / 2, this->height() / 2);
 
-        line = new BbLine(getScene());
+        line = new BbLine(getScene(), this);
 		line->startDraw(_drawPoint);
 
         getScene()->startDrawingCursor();
@@ -248,4 +248,14 @@ void BbView::drawRecvPoint()
 	_drawPoint += QPointF(x,y);
     getScene()->moveDrawingCursor(_drawPoint);
 	line->drawing(_drawPoint);
+}
+
+void BbView::changeCurveMode(int curveMode)
+{
+    _curveMode = curveMode;
+}
+
+int BbView::getCurveMode()
+{
+    return _curveMode;
 }
